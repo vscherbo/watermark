@@ -5,8 +5,13 @@
 #SRC=IMG_2881-all-progressive-max90.jpg
 SRC=$1
 src_ext=$(ext $1)
-DST=watermark${src_ext}
+src_name="$(namename $1)"
+#DST=watermark${src_ext}
+DST="${src_name}"_wm"${src_ext}"
 WMARK=$(date +'%F ЩВА')
+
+echo DST=$DST
+#exit 0
 
 rm -f $DST
 
@@ -33,7 +38,7 @@ fi
 # make label image
 
 # AR-1H21-GBN.png  -size 133x133 \
-WM_DST="$(namename $1)"_wm"$src_ext"
+WM_DST="$src_name"_tmp"$src_ext"
 set -vx
 convert -fill $color -stroke 'black' -strokewidth 1 -background transparent \
         +distort SRT $angle \
@@ -69,8 +74,8 @@ else
 	echo label_w=$label_w
 	echo label_h=$label_h
 	shift=0
-	w1=$((${width}-$shift-${label_w}/2))
-	h1=$((${height}-$shift-${label_h}/2))
+	w1=$(((${width}-$shift-${label_w}/2)*97/100))
+	h1=$(((${height}-$shift-${label_h}/2)*97/100))
 	echo 'calculated w1='$w1
 	echo 'calculated h1='$h1
 	# AR-1H21-GBN.png OK
@@ -110,3 +115,4 @@ set +vx
 
 display "$DST" &
 
+rm -f "$WM_DST"
