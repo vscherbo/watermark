@@ -54,7 +54,7 @@ echo label_w=$label_w
 echo label_h=$label_h
 
 
-
+# я использую цвет для даты сейчас #797979
 
 if [ $width -ge $height ]
 then
