@@ -36,7 +36,7 @@ CleanMeta () {
 
   EXT=`ext $1`
   case $EXT in
-   .jpg|.JPG|.jpeg|.JPEG)
+   .jpg|.JPG|.jpeg|.JPEG|.png|.PNG)
 		DT=$($EXIFTOOL	-csv -csvDelim '^' -DateTimeOriginal "$1" |tail -1)
 		echo "$DT" |grep -q '\^' 
 		if [ $? -eq 0 ]
@@ -45,14 +45,15 @@ CleanMeta () {
 		else
 			DT=
 		fi
-		echo DT="$DT"
+		logmsg INFO "extracted DateTimeOriginal=$DT"
 
 	    $ECHO $MOGRIFY -define preserve-timestamp=true -strip "$1"
 		RC=$?
 	    [ $RC -eq 0 ] || logmsg $RC "Strip metadata from $1 finished with rc=$RC"
-		if [ -n $DT ]
+		if [ $DT ]
 		then
-			$ECHO $EXIFTOOL -P -overwrite_original -DateTimeOriginal='$DT' "$1"
+			$ECHO $EXIFTOOL -P -overwrite_original -DateTimeOriginal=\'$DT\' "$1"
+			logmsg $? "restore of original DateTimeOriginal completed"
 		fi
    ;;
    .pdf|.PDF)
@@ -69,7 +70,7 @@ CleanMeta () {
        RC=$?
        [ $RC -eq 0 ] && $ECHO mv $1-clean $1 || logmsg $RC "Failed pdftk on file $1 with rc=$RC"
    ;;
-   *) echo Wrong argument=$1
+   *) logmsg WARNING "Wrong argument=$1"
   esac
 }
 
@@ -85,13 +86,13 @@ else
 	ECHO=''
 fi
 
-logmsg "Started"
+logmsg INFO "Started"
 
 IFS_SAVE=$IFS
 IFS=";"
-for f in `find $UPLOAD_DIR -newermm "$FLAG" -type f \( -iregex '.*\.jp.*g$' -o -iname '*.pdf' \) -exec printf "%s;" {} \;`
+for f in `find $UPLOAD_DIR -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \;`
 do
-  echo $f
+  logmsg INFO "checking $f"
   F_OWN=`$STAT --format '%U:%G' "$f"` 
   F_PERM=`$STAT --format '%a' "$f" `
   CleanMeta "$f"
@@ -102,4 +103,4 @@ IFS=$IFS_SAVE
 
 $ECHO touch "$FLAG"
 
-logmsg "Finished"
+logmsg INFO "Finished"
