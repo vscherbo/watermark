@@ -11,13 +11,13 @@
 
 . /usr/local/bin/bashlib
 
-#UPLOAD_DIR=/home/bitrix/www/upload/
-#WORK_DIR=/root/bin/CleanMetadata
-#FLAG=/root/bin/CleanMetadata/upload.flag
+UPLOAD_DIR=/home/bitrix/www/upload/
+WORK_DIR=/home/bitrix/CleanMetadata
+FLAG=/home/bitrix/CleanMetadata/upload.flag
 TESTMODE=0	# if 1 - debug (commands not execute, only echo)
-UPLOAD_DIR=.
-WORK_DIR=.
-FLAG=upload.flag
+#UPLOAD_DIR=.
+#WORK_DIR=.
+#FLAG=upload.flag
 
 STAT=/usr/bin/stat
 SED=/bin/sed
@@ -90,14 +90,15 @@ logmsg INFO "Started"
 
 IFS_SAVE=$IFS
 IFS=";"
-for f in `find $UPLOAD_DIR -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \;`
+
+for f in `find $UPLOAD_DIR \( -path "*/rekvizit/*" -prune \) -o \( -path "*/resize_cache/*" -prune \) -o \( -path "*/tmp/*" -prune \) -o -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \;`
 do
   logmsg INFO "checking $f"
-  F_OWN=`$STAT --format '%U:%G' "$f"` 
-  F_PERM=`$STAT --format '%a' "$f" `
+  #F_OWN=`$STAT --format '%U:%G' "$f"` 
+  #F_PERM=`$STAT --format '%a' "$f" `
   CleanMeta "$f"
-  $ECHO $CHOWN ${F_OWN} ${f}
-  $ECHO $CHMOD ${F_PERM} ${f}
+  #$ECHO $CHOWN ${F_OWN} ${f}
+  #$ECHO $CHMOD ${F_PERM} ${f}
 done
 IFS=$IFS_SAVE
 
