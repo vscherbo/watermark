@@ -1,0 +1,18 @@
+InfoBegin
+InfoKey: Producer
+InfoValue: GPL Ghostscript 9.06
+InfoBegin
+InfoKey: Creator
+InfoValue: GPL Ghostscript 9.06
+InfoBegin
+InfoKey: Profile CMM Type
+InfoValue: GPL Ghostscript 9.06
+InfoBegin
+InfoKey: "Profile Creator"
+InfoValue: GPL Ghostscript 9.06
+InfoBegin
+InfoKey: Profile Copyright
+InfoValue: GPL Ghostscript 9.06
+InfoBegin
+InfoKey: Profile Description
+InfoValue: GPL Ghostscript 9.06
