@@ -2,3 +2,9 @@
 *.jpg
 *.psd
 *.txt
+*.log
+*.pdf
+*.org
+*.csv
+*.json
+*.exv
