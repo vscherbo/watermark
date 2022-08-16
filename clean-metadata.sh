@@ -12,12 +12,11 @@
 . /usr/local/bin/bashlib
 
 UPLOAD_DIR=/home/bitrix/www/upload/
-WORK_DIR=/home/bitrix/CleanMetadata
-FLAG=/home/bitrix/CleanMetadata/upload.flag
+[ -d $UPLOAD_DIR ] || UPLOAD_DIR=.
 TESTMODE=0	# if 1 - debug (commands not execute, only echo)
-#UPLOAD_DIR=.
-#WORK_DIR=.
-#FLAG=upload.flag
+
+WORK_DIR=$(dirname "$0")
+FLAG="$WORK_DIR/upload.flag"
 
 STAT=/usr/bin/stat
 SED=/bin/sed
@@ -28,7 +27,7 @@ EXIFTOOL=/usr/bin/exiftool
 PDFTK=/usr/bin/pdftk
 QPDF=/usr/bin/qpdf
 
-LOGFILE="$WORK_DIR/CleanMetadata.log"
+LOGFILE="$WORK_DIR/$(namename $0).log"
 
 
 
@@ -74,8 +73,6 @@ CleanMeta () {
   esac
 }
 
-
-#cd /root/bin/CleanMetadata
 cd $WORK_DIR
 
 exec 1>>$LOGFILE  2>&1
