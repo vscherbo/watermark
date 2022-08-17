@@ -106,4 +106,8 @@ done
 $ECHO touch "$FLAG"
 
 logmsg INFO "Finished"
+
 egrep -v '(image files|INFO)|\[minor\]' "$LOGFILE" |mail -s "$FNAME" root
+
+/usr/sbin/logrotate --state logrotate-clean-metadata.state logrotate-clean-metadata.conf
+
