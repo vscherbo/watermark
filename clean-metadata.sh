@@ -37,7 +37,8 @@ CleanMeta () {
 		echo "$DT" |grep -q '\^' 
 		if [ $? -eq 0 ]
 		then  # found '^', save DT
-			DT=$(echo "$DT"|sed 's/.*\^//g')
+			#DT=$(echo "$DT"|sed 's/.*\^//g')
+            DT="${DT/*^/}" 
 		else
 			DT=
 		fi
