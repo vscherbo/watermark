@@ -23,7 +23,8 @@ EXIFTOOL=/usr/bin/exiftool
 PDFTK=/usr/bin/pdftk
 QPDF=/usr/bin/qpdf
 
-LOGFILE="$WORK_DIR"/$(namename "$0").log
+FNAME="$(namename "$0")"
+LOGFILE="$WORK_DIR"/"$FNAME".log
 
 
 
@@ -105,3 +106,4 @@ done
 $ECHO touch "$FLAG"
 
 logmsg INFO "Finished"
+egrep -v '(image files|INFO)|\[minor\]' "$LOGFILE" |mail -s "$FNAME" root
