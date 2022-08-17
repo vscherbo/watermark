@@ -46,9 +46,9 @@ CleanMeta () {
 	    $ECHO $MOGRIFY -define preserve-timestamp=true -strip "$1"
 		RC=$?
 	    [ $RC -eq 0 ] || logmsg $RC "Strip metadata from $1 finished with rc=$RC"
-		if [ $DT ]
+		if [ "$DT" ]
 		then
-			$ECHO $EXIFTOOL -P -overwrite_original -DateTimeOriginal=\'$DT\' "$1"
+			$ECHO $EXIFTOOL -P -overwrite_original -DateTimeOriginal="$DT" "$1"
 			logmsg $? "restore of original DateTimeOriginal completed"
 		fi
    ;;
@@ -95,17 +95,9 @@ else
 	ECHO=''
 fi
 
-logmsg INFO "Started"
+logmsg INFO "Started in UPLOAD_DIR=$UPLOAD_DIR"
 
-#IFS_SAVE=$IFS
-#IFS=";"
-#for f in $(find $UPLOAD_DIR \( -path "*/rekvizit/*" -prune \) -o \( -path "*/resize_cache/*" -prune \) -o \( -path "*/tmp/*" -prune \) -o -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \;)
-#do
-#  CleanMeta "$f"
-#done
-#IFS=$IFS_SAVE
-
-find $UPLOAD_DIR \( -path "*/rekvizit/*" -prune \) -o \( -path "*/resize_cache/*" -prune \) -o \( -path "*/tmp/*" -prune \) -o -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \; | while IFS= read -r -d '' file; do
+find $UPLOAD_DIR \( -path "*/rekvizit/*" -prune \) -o \( -path "*/resize_cache/*" -prune \) -o \( -path "*/tmp/*" -prune \) -o -newermm "$FLAG" -type f -regextype posix-egrep \( -iregex '.*\.jp(e|)g$' -o -iregex '.*\.png$' -o -iname '*.pdf' \) -exec printf "%s;" {} \; | while read -r -d ';' file; do
   CleanMeta "$file"
 done    
 
